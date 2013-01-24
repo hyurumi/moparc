@@ -702,7 +702,7 @@ arena.view.render = function() {
   }
 
   for (var i = 0; i < arena.view.audiences.length; i++) { //jumping
-    console.log(arena.view.audiences[i].spinSpeed)
+    //console.log(arena.view.audiences[i].spinSpeed)
     arena.view.audiences[i].rotation.y += arena.view.audiences[i].spinSpeed * Math.PI * 0.03;
     if (arena.view.audiences[i].jumping) {
       if(arena.view.audiences[i].position.y === arena.view.FLOOR + arena.view.scene.position.y){

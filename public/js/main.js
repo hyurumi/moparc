@@ -10,5 +10,4 @@ window.addEventListener('load', function(){
     $('#particleSwitch').hide();
     $('#entry').show();
   });
-  var elem;
 });

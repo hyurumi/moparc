@@ -59,6 +59,8 @@ arena.eventHandler.clickDanceInterceptButtonHandler = function(){
     $('#danceInterceptButton').hide();
   }
   arena.socket.user.socket.emit('danceFinish');
+  $('#particleSwitch').hide();
+  $('#syncButton').hide();
   arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
   arena.view.animation.stop();
   arena.view.animation.play();
