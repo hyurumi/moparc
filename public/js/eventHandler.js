@@ -256,7 +256,7 @@ arena.eventHandler.onEntryButtonClicked = function(){
   else
     colorAngle = 90/360;
 
- if (name !== ''){
+  if (name !== ''){
     if (name === 'hyurumi'){
       arena.config.admin=true;
     }else {
@@ -270,19 +270,20 @@ arena.eventHandler.onEntryButtonClicked = function(){
         rotationY: position.rotationY,
         colorAngle: colorAngle,
         name: name
-      });
+      }
+    );
+    $("#landing_page").hide();
+    $(document).on('keydown', arena.eventHandler.onKeyDown);
+    $(document).on('keyup', arena.eventHandler.onKeyUp);
+    $('#instructions').delay(5000).fadeTo(1500, 0.1);
+    $('#instructions').on('mouseover', function(e){
+      $(this).fadeTo(500, 1.0);
+    });
+    $('#instructions').on('mouseout', function(){
+      $(this).delay(3000).fadeTo(1500, 0.1);
+    });
+    arena.view.rendering = true;
   }
-  $("#landing_page").hide();
-  $(document).on('keydown', arena.eventHandler.onKeyDown);
-  $(document).on('keyup', arena.eventHandler.onKeyUp);
-  $('#instructions').delay(5000).fadeTo(1500, 0.1);
-  $('#instructions').on('mouseover', function(e){
-    $(this).fadeTo(500, 1.0);
-  });
-  $('#instructions').on('mouseout', function(){
-    $(this).delay(3000).fadeTo(1500, 0.1);
-  });
-  arena.view.rendering = true;
 
 };
 
