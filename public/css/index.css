@@ -1,0 +1,119 @@
+body {
+  margin: 0px;
+  overflow: hidden;
+  font-family:Monospace;
+  font-size:13px;
+  text-align:center;
+  font-weight: bold;
+  text-align:center;
+}
+#landing_page {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #FFFFFF;
+  z-index: 1000;
+}
+#landing_page .title{
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+#landing_page .top_image{
+  width: 607px;
+  margin: 0 auto 0px;
+  padding-bottom: 10px;
+  border-bottom: 10px solid #000;
+}
+
+#landing_page .contents {
+  margin: 20px auto 0;
+}
+#landing_page .contents .notification{
+  display: inline-block;
+  background-image:url("../images/entry.png");
+  background-position: 0px -92px;
+  width: 334px;
+  height: 46px;
+}
+
+#landing_page .contents input{
+  margin-right: 10px;
+  margin-left: 10px;
+  height: 36px;
+  font-size: 15px;
+  vertical-align: top;
+  border: 2px solid #000;
+}
+#landing_page .contents .button{
+  display: inline-block;
+  background-image:url("../images/entry.png");
+  background-position: 0px 0px;
+  width: 135px;
+  height: 46px;
+}
+#landing_page .contents .button:hover {
+  background-image:url("../images/entry.png");
+  background-position: 0px -47px;
+  width: 135px;
+  height: 46px;
+  cursor: pointer;
+}
+
+
+#container{
+  background-color: #000;
+  color: #fff;
+}
+#instructions {
+  background-image:url("../images/instructions.png");
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  width: 187px;
+  height: 220px;
+}
+
+#commentInput {
+  height: 36px;
+  font-size: 15px;
+  border: 6px solid #FFFFFF;
+  background-color: #111111;
+  z-index: 20;
+  position:absolute;
+  top: 200px;
+  width: 400px;
+  margin-left:-200px;
+  left: 50%;
+  color: white;
+}
+
+#users  {
+  border: 1px dotted white;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  color: white;
+}
+#dancers  {
+  border: 1px dotted white;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  color: white;
+}
+
+#controls {
+  border-bottom: 1px solid white;
+  width : 100%;
+  position: absolute;
+  top: 0px;
+  color: white;
+}
+
+
+#modal {
+  color: black;
+}

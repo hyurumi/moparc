@@ -1,0 +1,19 @@
+{
+  "name": "application-name",
+  "version": "0.0.1-1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "connect": "*",
+    "mongoose": "*",
+    "moment": "*",
+    "socket.io": "*",
+    "underscore": "*"
+  },
+  "engines": {
+    "node": "0.8.15"
+  },
+  "subdomain": "moparc"
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+<title>Kinect Test</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<div id="landing_page">
+  <div class="title">
+    <img src="images/title.png">
+  </div>
+  <div class="top_image">
+    <img src="images/top.png">
+  </div>
+  <div class="contents" id="loading">
+    <div class="notification"></div>
+  </div>
+  <div class="contents" id="entry" style="display: none">
+    <input type="text" name="name" id="entryName" size="30" maxlength="30" placeholder="なまえを入力(１５文字まで)" autofocus>
+    <div class="button" id="entryButton"></div>
+  </div>
+</div>
+
+<div id="container">
+  <div id="instructions">
+  </div>
+  <div id ="data" style="position:absolute; top:0; left:0; height: 50px; font-size:40px; color: white;">
+  aa
+  </div>
+  <input type="text" name="name" id="commentInput" size="30" maxlength="30" placeholder="コメントを入力(１５文字まで)" autofocus>
+</div>
+
+<div id="controls">
+  <button id ="syncButton">sync</button>
+  <button id ="danceInterceptButton">stop dancing!</button>
+  <button id ="danceEntryButton">I would like to dance!</button>
+  <button id ="danceEntryCancelButton">Cancel dance entry..</button>
+</div>
+
+<div id="users">
+</div>
+
+<div id="dancers">
+</div>
+
+<div id="modal">
+  <div id="modalContent">
+    <button id ="danceStartButton">start dancing!</button>
+  </div>
+</div>
+
+<script type="text/javascript" src="js/lib/three.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/lib/jquery-1.8.2.min.js"><\/script>')</script>
+<script type="text/javascript" src="js/lib/socket.io.js"></script>
+
+<script type="text/javascript">
+var arena = {
+  config       : {},
+  view         : {},
+  resource     : {},
+  transition   : {},
+  dom          : {},
+  socket       : {},
+  eventHandler : {}
+};
+
+</script>
+<script src="js/fonts/07yasashisagothic_regular.typeface.js"></script>
+
+<script type="text/javascript" src="js/lib/shaders/ConvolutionShader.js"></script>
+<script type="text/javascript" src="js/lib/shaders/CopyShader.js"></script>
+<script type="text/javascript" src="js/lib/shaders/FocusShader.js"></script>
+<script type="text/javascript" src="js/lib/shaders/FXAAShader.js"></script>
+
+<script type="text/javascript" src="js/lib/postprocessing/EffectComposer.js"></script>
+<script type="text/javascript" src="js/lib/postprocessing/RenderPass.js"></script>
+<script type="text/javascript" src="js/lib/postprocessing/MaskPass.js"></script>
+<script type="text/javascript" src="js/lib/postprocessing/BloomPass.js"></script>
+<script type="text/javascript" src="js/lib/postprocessing/ShaderPass.js"></script>
+
+<script type="text/javascript" src="js/MMD.js"></script>
+
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/resource.js"></script>
+<script type="text/javascript" src="js/transition.js"></script>
+<script type="text/javascript" src="js/dom.js"></script>
+<script type="text/javascript" src="js/socket.js"></script>
+<script type="text/javascript" src="js/view.js"></script>
+<script type="text/javascript" src="js/eventHandler.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
