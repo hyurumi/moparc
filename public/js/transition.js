@@ -12,21 +12,25 @@ arena.transition.nextDancer = function() {
       arena.dom.modal.style.display = 'block';
     }else if (arena.dom.video.currentTime > 0 && nextDancer.id.substring(7) !== arena.socket.user.socket.socket.sessionid) {
       console.log('Others Dancing');
+      arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
       arena.view.animation.stop();
       arena.view.animation.play();
       arena.view.kinecting = true;
       $('#syncButton').show();
     } else if (arena.dom.video.currentTime === 0 && nextDancer.id.substring(7) !== arena.socket.user.socket.socket.sessionid) {
+      arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
       arena.view.animation.stop();
       arena.view.animation.play();
       arena.view.kinecting = true;
     } else {
+      arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
       arena.view.animation.stop();
       arena.view.animation.play();
       arena.view.kinecting = true;
       console.log('oyya?');
     }
   }else {
+    arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
     arena.view.animation.stop();
     arena.view.animation.play();
     arena.view.kinecting = false;

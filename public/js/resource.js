@@ -43,8 +43,7 @@ arena.resource.loadMaterial = function(){
   loader.load( arena.resource.material.audience, function(geometry, materials){
     arena.view.audience = {};
     arena.view.audience.geometry = geometry;
-    //arena.view.audience.material = new THREE.MeshFaceMaterial(materials);
-    arena.view.audience.materials = materials
+    arena.view.audience.materials = materials;
   });
   loader.load( arena.resource.material.stage, function(geometry, materials){
     //console.log(geometry)
@@ -66,7 +65,7 @@ arena.resource.loadMaterial = function(){
     //console.log(geometry)
     //THREE.AnimationHandler.add( geometry.animation );
 
-    //ensureLoop( geometry.animation );
+    ensureLoop( geometry.animation );
 
     for ( var i = 0; i < geometry.materials.length; i ++ ) {
 
@@ -76,23 +75,23 @@ arena.resource.loadMaterial = function(){
       m.wrapAround = true;
 
     }
-    mesh = new THREE.SkinnedMesh( geometry, new THREE.MeshFaceMaterial( geometry.materials ) );
-    mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
-    mesh.scale.set( 8,8,8 );
+    arena.view.player.mesh = new THREE.SkinnedMesh( geometry, new THREE.MeshFaceMaterial( geometry.materials ) );
+    arena.view.player.mesh.position.set(0, arena.view.STAGE.height + arena.view.FLOOR, -100);
+    arena.view.player.mesh.scale.set( 8,8,8 );
     //mesh.castShadow = true;
     //mesh.receiveShadow = true; // self shadow
 
-    arena.view.scene.add( mesh );
+    arena.view.scene.add( arena.view.player.mesh );
 
     if (geometry.animation.name) {
       THREE.AnimationHandler.add(geometry.animation);
-      arena.view.animation = new THREE.Animation( mesh, geometry.animation.name );
+      arena.view.animation = new THREE.Animation( arena.view.player.mesh, geometry.animation.name );
       arena.view.animation.JITCompile = false;
       arena.view.animation.interpolationType = THREE.AnimationHandler.LINEAR;
       arena.view.animation.play();
     }
     if (geometry.MMDIKs.length) {
-      arena.view.animation.ik = new THREE.MMDIK(mesh);
+      arena.view.animation.ik = new THREE.MMDIK(arena.view.player.mesh);
     }
 
   });
@@ -141,11 +140,10 @@ arena.view.createDancer = function( geometry, materials, x, y, z, s ) {
   arena.view.animation.interpolationType = THREE.AnimationHandler.LINEAR;
 
   for (var i=0; i < arena.view.animation.hierarchy.length; i++){
-    arena.view.player.partLengthes.push(arena.view.animation.hierarchy[i].position.length());
     arena.view.player.partQuaternions.push(arena.view.animation.hierarchy[i].quaternion.clone());
-    arena.view.player.partInitialPositions.push(arena.view.animation.hierarchy[i].position.clone());
+    arena.view.player.partLengthses.push(arena.view.animation.hierarchy[i].position.length());
   }
-  console.log(arena.view.player.partQuaternions);
+  //console.log(arena.view.player.partQuaternions);
 
   arena.view.animation.play();
 

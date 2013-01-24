@@ -48,7 +48,7 @@ arena.view.player.partInitialPositions = [];
 arena.view.player.partLengthes = [];
 
 arena.func = {};
-arena.func.QuaternionFromVectors = function(fVector, vectorA, vectorB, prevQua) {
+arena.func.QuaternionFromVectors = function(fVector, vectorA, vectorB, prevQuaternion) {
   var epsilon = 0.000000001;
   var fromVector = fVector.clone().normalize();
   var toVector = (vectorA.clone()).subSelf(vectorB.clone()).normalize();
@@ -61,23 +61,16 @@ arena.func.QuaternionFromVectors = function(fVector, vectorA, vectorB, prevQua) 
     axis = new THREE.Vector3(0,0,0);
     angle = 0;
   }else {
-    //axis = axis.divideScalar(len);
-    axis = axis.normalize();
+    axis = axis.divideScalar(len);
   }
-  return (new THREE.Quaternion()).setFromAxisAngle(axis, angle);
+  prevQuaternion = prevQuaternion || new THREE.Quaternion();
+  var quaternion = (new THREE.Quaternion()).setFromAxisAngle(axis, angle);
+  quaternion = quaternion.multiplySelf(prevQuaternion.clone().inverse());
+  return quaternion;
 }
 arena.func.Vector3FromObject = function(obj){
   return new THREE.Vector3(obj.x, obj.y, -obj.z);
 }
-
-arena.view.player.convert = function(_pointA, _pointB, index){
-  var pointA = _pointA.clone();
-  var pointB = _pointB.clone();
-  var sub = pointA.subSelf(pointB);
-  var subTransformed = new THREE.Vector3(sub.x, sub.y, sub.z);
-  var position = subTransformed.setLength(arena.view.player.partLengthes[index]);
-  return position;
-};
 
 arena.view.player.setPartPosition = function(in_update){
   var pos = {};
@@ -85,40 +78,32 @@ arena.view.player.setPartPosition = function(in_update){
     pos[arena.view.player.parts[i]] = arena.func.Vector3FromObject(in_update[arena.view.player.parts[i]]);
   }
   pos['HIP'] = ((new THREE.Vector3()).add(pos['RIGHT_HIP'], pos['LEFT_HIP'])).divideScalar(2);
-  //console.log(pos);
-  //arena.view.player.prevPoint = pos['TORSO'];
+
+  arena.view.player.previousTORSO = arena.view.player.previousTORSO || pos['TORSO'];
   //arena.view.basepoint = arena.view.basepoint || pos['TORSO'];
   //arena.view.animation.hierarchy[0].position.addSelf(pos['TORSO'],arena.view.basepoint).multiplyScalar(0.0001);
-  //とりあえず中心固定。
+  arena.view.player.mesh.position.addSelf(
+    (pos['TORSO'].clone().subSelf(arena.view.player.previousTORSO)).multiplyScalar(0.1)
+  );
+  arena.view.player.previousTORSO = pos['TORSO'];
 
   var tree = arena.view.animation.hierarchy;
 
   tree[1].quaternion = arena.func.QuaternionFromVectors(tree[1].position, pos['NECK'], pos['TORSO']);
-  tree[2].quaternion = arena.func.QuaternionFromVectors(tree[2].position, pos['HEAD'], pos['NECK']);
+  tree[2].quaternion = arena.func.QuaternionFromVectors(tree[2].position, pos['HEAD'], pos['NECK'], tree[1].quaternion);
 
   //tree[17].quaternion = arena.func.QuaternionFromVectors(tree[17].position, pos['RIGHT_SHOULDER'], pos['TORSO']);
   tree[18].quaternion = arena.func.QuaternionFromVectors(tree[18].position, pos['RIGHT_ELBOW'], pos['RIGHT_SHOULDER']);
-  tree[19].quaternion = arena.func.QuaternionFromVectors(tree[19].position, pos['RIGHT_HAND'], pos['RIGHT_ELBOW']);
+  tree[19].quaternion = arena.func.QuaternionFromVectors(tree[19].position, pos['RIGHT_HAND'], pos['RIGHT_ELBOW'], tree[18].quaternion);
   //tree[47].quaternion = arena.func.QuaternionFromVectors(tree[47].position, pos['LEFT_SHOULDER'], pos['TORSO']);
   tree[48].quaternion = arena.func.QuaternionFromVectors(tree[48].position, pos['LEFT_ELBOW'], pos['LEFT_SHOULDER']);
-  tree[49].quaternion = arena.func.QuaternionFromVectors(tree[49].position, pos['LEFT_HAND'], pos['LEFT_ELBOW']);
+  tree[49].quaternion = arena.func.QuaternionFromVectors(tree[49].position, pos['LEFT_HAND'], pos['LEFT_ELBOW'], tree[48].quaternion);
 
-  tree[38].quaternion = arena.func.QuaternionFromVectors(tree[38].position, pos['RIGHT_KNEE'], pos['HIP']);
-  console.log(tree[38].quaternion)
-  tree[39].quaternion = arena.func.QuaternionFromVectors(tree[39].position, pos['RIGHT_FOOT'], pos['RIGHT_KNEE']);
-  console.log(tree[39].quaternion)
+  tree[38].quaternion = arena.func.QuaternionFromVectors(tree[38].position, pos['RIGHT_KNEE'], pos['HIP'], tree[9].quaternion);
+  tree[39].quaternion = arena.func.QuaternionFromVectors(tree[39].position, pos['RIGHT_FOOT'], pos['RIGHT_KNEE'], tree[38].quaternion);
 
-  //tree[39].position = tree[39].quaternion.multiplyVector3(arena.view.player.partInitialPositions[39])
- //tree[39].position = arena.view.player.convert(pos['RIGHT_KNEE'],pos['RIGHT_HIP'], 39);
-
-  //tree[40].quaternion = arena.func.QuaternionFromVectors(tree[40].position, pos['RIGHT_FOOT'], pos['RIGHT_KNEE'], tree[39].quaternion);
-  //tree[40].position = arena.view.player.convert(pos['RIGHT_FOOT'],pos['RIGHT_KNEE'], 40);
-
-  tree[68].quaternion = arena.func.QuaternionFromVectors(tree[68].position, pos['LEFT_KNEE'], pos['HIP']);
-  //tree[68].position = arena.view.player.convert(pos['LEFT_HIP'],pos['TORSO'], 68);
-  //tree[69].position = arena.view.player.convert(pos['LEFT_KNEE'],pos['LEFT_HIP'], 69);
-  //tree[70].position = arena.view.player.convert(pos['LEFT_FOOT'],pos['LEFT_KNEE'], 70);
-
+  tree[68].quaternion = arena.func.QuaternionFromVectors(tree[68].position, pos['LEFT_KNEE'], pos['HIP'], tree[9].quaternion);
+  tree[69].quaternion = arena.func.QuaternionFromVectors(tree[69].position, pos['LEFT_FOOT'], pos['LEFT_KNEE'], tree[68].quaternion);
 
 };
 
@@ -221,23 +206,67 @@ arena.view.init = function() {
 
   //PARTICLES
 
-  //if (arena.view.isParticle) {
-    var geometry = new THREE.Geometry();
+  var geometry = new THREE.Geometry();
 
-    for ( i = 0; i < 1000; i ++ ) {
+  for ( i = 0; i < 1000; i ++ ) {
 
-      var vertex = new THREE.Vector3();
-      var r = Math.random() * 200;
-      var theta = Math.random() * Math.PI * 2;
-      vertex.x = r * Math.cos(theta);
-      vertex.z = r * Math.sin(theta);
-      vertex.y = Math.random() * 150;
+    var vertex = new THREE.Vector3();
+    var r = Math.random() * 200;
+    var theta = Math.random() * Math.PI * 2;
+    vertex.x = r * Math.cos(theta);
+    vertex.z = r * Math.sin(theta);
+    vertex.y = Math.random() * 150;
 
-      geometry.vertices.push( vertex );
+    geometry.vertices.push( vertex );
 
-    }
-    arena.view.particlesGroup =[];
-    for ( i = 0; i < arena.view.particleParameters.length; i ++ ) {
+  }
+  arena.view.particlesGroup =[];
+  for ( i = 0; i < arena.view.particleParameters.length; i ++ ) {
+
+    size  = arena.view.particleParameters[i][1];
+    color = arena.view.particleParameters[i][0];
+
+    arena.view.particleMaterials[i] = new THREE.ParticleBasicMaterial({
+      size: 10, //size,
+      map: THREE.ImageUtils.loadTexture(
+        "../images/particle.png"
+      ),
+      blending: THREE.AdditiveBlending,
+      transparent: true
+    });
+    arena.view.particleMaterials[i].color.setHSV( color[0], color[1], color[2] );
+
+    particles = new THREE.ParticleSystem( geometry, arena.view.particleMaterials[i] );
+    particles.scale.set(i, 1 / i, i);
+    particles.position.y = -(300 - 250 / (i + 1));
+
+    //particles.rotation.x = Math.random() * 6;
+    //particles.rotation.y = Math.random() * 6;
+    //particles.rotation.z = Math.random() * 6;
+    arena.view.particlesGroup.push(particles);
+
+    //arena.view.scene.add( particles );
+
+    particles.sortParticles = true;
+  }
+
+  // Smoke
+  var geometry = new THREE.Geometry();
+
+  for ( i = 0; i < 1000; i ++ ) {
+
+    var vertex = new THREE.Vector3();
+    var r = Math.random() * 200;
+    var theta = Math.random() * Math.PI * 2;
+    vertex.x = r * Math.cos(theta);
+    vertex.z = r * Math.sin(theta);
+    vertex.y = Math.random() * 150;
+
+    geometry.vertices.push( vertex );
+
+  }
+  arena.view.particlesGroup =[];
+  for ( i = 0; i < arena.view.particleParameters.length; i ++ ) {
 
       size  = arena.view.particleParameters[i][1];
       color = arena.view.particleParameters[i][0];
@@ -245,7 +274,7 @@ arena.view.init = function() {
       arena.view.particleMaterials[i] = new THREE.ParticleBasicMaterial({
         size: 10, //size,
         map: THREE.ImageUtils.loadTexture(
-              "../images/particle.png"
+          "../images/particle.png"
         ),
         blending: THREE.AdditiveBlending,
         transparent: true
@@ -265,7 +294,6 @@ arena.view.init = function() {
 
       particles.sortParticles = true;
     }
-  //}
 
   // WALLs
 
@@ -478,7 +506,11 @@ arena.view.newAudience = function(dataObject) {
   console.log(dataObject)
   cloneMaterials[0].color.setHSV(dataObject.colorAngle, 0, 1);
   var material = new THREE.MeshFaceMaterial(cloneMaterials);
-  var mesh = new THREE.Mesh( arena.view.audience.geometry, material);
+
+  var geometry = arena.view.audience.geometry.clone();
+
+
+  var mesh = new THREE.Mesh( geometry, material);
   var positionX = dataObject.positionR * Math.cos(dataObject.positionTheta);
   var positionZ = dataObject.positionR * Math.sin(dataObject.positionTheta);
   mesh.position = new THREE.Vector3(positionX, arena.view.FLOOR, positionZ);
@@ -495,7 +527,31 @@ arena.view.newAudience = function(dataObject) {
   mesh.scale = new THREE.Vector3(7, 7, 7);
   mesh.spinSpeed = 0;
   mesh.socketId = dataObject.socketId;
+  var tg = new THREE.TextGeometry(
+    dataObject.name,
+    {
+      size: 20,
+      height: 3, //太さ
+      curveSegments: 5,
+      font: '07yasashisagothic'
+    }
+  );
+  tg.computeBoundingBox();
+  THREE.GeometryUtils.center(tg);
+  var material =  new THREE.MeshBasicMaterial({
+    color: 0xFFFFFF, overdraw: true//, wireframe: true, wireframeLinewidth: 1
+  });
+  var tm = new THREE.Mesh(tg, material);
+  tm.position = new THREE.Vector3(positionX, arena.view.FLOOR + 150, positionZ);
+  tm.lookAt(new THREE.Vector3(
+    arena.view.scene.position.x,
+    arena.view.FLOOR+150,
+    arena.view.scene.position.z
+  ));
+
+  arena.view.scene.add( tm );
   arena.view.scene.add( mesh );
+  mesh.nameTextMesh = tm;
   arena.view.audiences.push(mesh);
   if (dataObject.self){
     arena.view.userMesh = mesh;
@@ -504,6 +560,7 @@ arena.view.newAudience = function(dataObject) {
 
 arena.view.removeAudience = function(dataObject) {
   var answer = arena.view.audiences.search(dataObject.socketId);
+  arena.view.scene.remove(answer.mesh.nameTextMesh);
   arena.view.scene.remove(answer.mesh);
   arena.view.audiences.splice(answer.index, 1);
 };
@@ -540,12 +597,6 @@ arena.view.render = function() {
         j++;
       }
     }
-    /*for ( i = 0; i < arena.view.particleMaterials.length; i ++ ) {
-      var color = arena.view.particleParameters[i][0];
-      h = ( 360 * ( color[0] + time * 10 ) % 360 ) / 360;
-      arena.view.particleMaterials[i].color.setHSV( h, color[1], color[2] );
-    }
-    */
   }
 
   // CAMERA
@@ -586,9 +637,9 @@ arena.view.render = function() {
     if (arena.view.userMesh.positionR > Math.sqrt(3)*arena.view.wall.unit * 2 -13 ){
       arena.view.velocity.r = 0 - arena.view.velocity.r;
       arena.view.userMesh.positionR = Math.sqrt(3) * arena.view.wall.unit * 2 - 14;
-    }else if (arena.view.userMesh.positionR < 220) {
+    }else if (arena.view.userMesh.positionR < 250) {
       arena.view.velocity.r = 0 - arena.view.velocity.r;
-      arena.view.userMesh.positionR = 220 + 1;
+      arena.view.userMesh.positionR = 250 + 1;
     }
   }
 
@@ -616,9 +667,16 @@ arena.view.render = function() {
       arena.view.userMesh.positionTheta += arena.view.velocity.theta;
       arena.view.userMesh.position.x = arena.view.userMesh.positionR * Math.cos(arena.view.userMesh.positionTheta);
       arena.view.userMesh.position.z = arena.view.userMesh.positionR * Math.sin(arena.view.userMesh.positionTheta);
+      arena.view.userMesh.nameTextMesh.position.x = arena.view.userMesh.position.x;
+      arena.view.userMesh.nameTextMesh.position.z = arena.view.userMesh.position.z;
       arena.view.userMesh.lookAt( new THREE.Vector3(
         arena.view.scene.position.x,
         arena.view.scene.position.y + arena.view.FLOOR,
+        arena.view.scene.position.z
+      ));
+      arena.view.userMesh.nameTextMesh.lookAt( new THREE.Vector3(
+        arena.view.scene.position.x,
+        150 + arena.view.FLOOR,
         arena.view.scene.position.z
       ));
     }
@@ -645,6 +703,7 @@ arena.view.render = function() {
   }
 
   for (var i = 0; i < arena.view.audiences.length; i++) { //jumping
+    console.log(arena.view.audiences[i].spinSpeed)
     arena.view.audiences[i].rotation.y += arena.view.audiences[i].spinSpeed * Math.PI * 0.03;
     if (arena.view.audiences[i].jumping) {
       if(arena.view.audiences[i].position.y === arena.view.FLOOR + arena.view.scene.position.y){

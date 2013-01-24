@@ -23,10 +23,10 @@ arena.socket.user.socket.on('loadUsersWithMeshes', function(dataObject){
     $('#users').append('<div class="userItem" id="user_'+ this.socketId +'">' +
                        this.name + '</div>');
     if (arena.socket.user.socket.socket.sessionid === this.socketId){
-      arena.view.newAudience({positionR: this.positionR, positionTheta: this.positionTheta, rotationY: this.rotationY, self: true, socketId: this.socketId, colorAngle: this.colorAngle});
+      arena.view.newAudience({name: this.name, positionR: this.positionR, positionTheta: this.positionTheta, rotationY: this.rotationY, self: true, socketId: this.socketId, colorAngle: this.colorAngle});
     }
     else {
-      arena.view.newAudience({positionR: this.positionR, positionTheta: this.positionTheta, rotationY: this.rotationY, self: false, socketId: this.socketId, colorAngle: this.colorAngle});
+      arena.view.newAudience({name: this.name, positionR: this.positionR, positionTheta: this.positionTheta, rotationY: this.rotationY, self: false, socketId: this.socketId, colorAngle: this.colorAngle});
     }
   });
 });
@@ -51,11 +51,15 @@ arena.socket.user.socket.on('loadDancers', function(dataObject){
 });
 
 arena.socket.user.socket.on('addNewAudienceMesh', function(dataObject){
-  arena.view.newAudience({positionR: dataObject.user.positionR,
-                         positionTheta: dataObject.user.positionTheta,
-                         rotationY: dataObject.user.rotationY,
-                         colorAngle: dataObject.user.colorAngle,
-                         self: false, socketId: dataObject.user.socketId});
+  arena.view.newAudience({
+    name: dataObject.user.name,
+    positionR: dataObject.user.positionR,
+    positionTheta: dataObject.user.positionTheta,
+    rotationY: dataObject.user.rotationY,
+    colorAngle: dataObject.user.colorAngle,
+    self: false,
+    socketId: dataObject.user.socketId
+  });
 });
 
 arena.socket.user.socket.on('updateUser', function(dataObject){
@@ -63,7 +67,10 @@ arena.socket.user.socket.on('updateUser', function(dataObject){
   var mesh = arena.view.audiences.search(dataObject.user.socketId);
   mesh.mesh.position.x = dataObject.user.positionR * Math.cos(dataObject.user.positionTheta);
   mesh.mesh.position.z = dataObject.user.positionR * Math.sin(dataObject.user.positionTheta);
+  mesh.mesh.nameTextMesh.position.x = mesh.mesh.position.x;
+  mesh.mesh.nameTextMesh.position.z = mesh.mesh.position.z;
   mesh.mesh.rotation.y = dataObject.user.rotationY;
+  mesh.mesh.nameTextMesh.rotation.y = mesh.mesh.rotation.y;
   //console.log(mesh);
 });
 
@@ -111,7 +118,7 @@ arena.socket.user.socket.on('updateUserBehavior', function(dataObject){
   var mesh = arena.view.audiences.search(dataObject.socketId);
   if(dataObject.behavior === 'spin') {
     if (dataObject.action === 'start') {
-      mesh.mesh.spinspeed = 5;
+      mesh.mesh.spinSpeed = 5;
     }else if (dataObject.action === 'stop'){
       mesh.mesh.spinSpeed = 0;
     }
