@@ -7,6 +7,7 @@ window.addEventListener('load', function(){
     arena.view.animate();
     arena.socket.video.socket.emit('getCurrentTime');
     $('#loading').hide();
+    $('#particleSwitch').hide();
     $('#entry').show();
   });
   var elem;

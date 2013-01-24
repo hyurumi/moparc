@@ -76,6 +76,22 @@ body {
   height: 220px;
 }
 
+#particleSwitch {
+    background-color: rgba(255,255,255,0.1);
+    font-color: white;
+    font-size: 40px;
+    padding: auto;
+    position: absolute;
+    right: 10px;
+    bottom: 30px;
+    width: 400px;
+    height: 400px;
+    z-index: 100;
+}
+#particleSwitch:hover {
+    background-color: rgba(255,255,255,0.5);
+}
+
 #commentInput {
   height: 36px;
   font-size: 15px;

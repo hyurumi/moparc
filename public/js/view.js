@@ -221,7 +221,7 @@ arena.view.init = function() {
 
   //PARTICLES
 
-  if (arena.view.isParticle) {
+  //if (arena.view.isParticle) {
     var geometry = new THREE.Geometry();
 
     for ( i = 0; i < 1000; i ++ ) {
@@ -236,7 +236,7 @@ arena.view.init = function() {
       geometry.vertices.push( vertex );
 
     }
-    var particles;
+    arena.view.particlesGroup =[];
     for ( i = 0; i < arena.view.particleParameters.length; i ++ ) {
 
       size  = arena.view.particleParameters[i][1];
@@ -259,12 +259,13 @@ arena.view.init = function() {
       //particles.rotation.x = Math.random() * 6;
       //particles.rotation.y = Math.random() * 6;
       //particles.rotation.z = Math.random() * 6;
+      arena.view.particlesGroup.push(particles);
 
-      arena.view.scene.add( particles );
+      //arena.view.scene.add( particles );
 
+      particles.sortParticles = true;
     }
-    particles.sortParticles = true;
-  }
+  //}
 
   // WALLs
 

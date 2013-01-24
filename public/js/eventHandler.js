@@ -12,6 +12,27 @@ arena.eventHandler.init = function(){
   $('#danceStartButton').on('click', arena.eventHandler.clickDanceStartButtonHandler);//in modal
   $('#syncButton').on('click', arena.eventHandler.clickSync);
 
+  $('#particleSwitch').on('click', function(){
+    if (arena.view.isParticle) {
+      arena.view.isParticle = false;
+      for (var i = 0; i < arena.view.particlesGroup.length; i++){
+        arena.view.scene.remove( arena.view.particlesGroup[i] );
+      }
+      arena.socket.user.socket.emit('updateUserBehavior',{
+        behavior:'particle', action:'stop'
+      });
+    } else {
+      arena.view.isParticle = true;
+      for (var i = 0; i < arena.view.particlesGroup.length; i++){
+        arena.view.scene.add( arena.view.particlesGroup[i] );
+      }
+      arena.socket.user.socket.emit('updateUserBehavior',{
+        behavior:'particle', action:'start'
+      });
+    }
+
+  });
+
   // In landing Page
   $('#entryButton').on('click', arena.eventHandler.onEntryButtonClicked);
 
@@ -51,6 +72,7 @@ arena.eventHandler.clickDanceStartButtonHandler = function(){
   arena.dom.modal.style.display = 'none';
   arena.dom.video.play();
   $('#syncButton').show();
+  $('#particleSwitch').show();
   $('#danceInterceptButton').show();
   $('#danceEntryCancelButton').hide();
   arena.socket.video.socket.emit('startVideo');

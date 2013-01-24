@@ -133,6 +133,18 @@ arena.socket.user.socket.on('updateUserBehavior', function(dataObject){
         0, 1
       );
     }
+  } else if (dataObject.behavior === 'particle') {
+    if (dataObject.action === 'start') {
+      arena.view.isParticle = true;
+      for (var i = 0; i < arena.view.particlesGroup.length; i++){
+        arena.view.scene.add( arena.view.particlesGroup[i] );
+      }
+    }else if (dataObject.action === 'stop'){
+      arena.view.isParticle = false;
+      for (var i = 0; i < arena.view.particlesGroup.length; i++){
+        arena.view.scene.remove( arena.view.particlesGroup[i] );
+      }
+    }
   }
 });
 
