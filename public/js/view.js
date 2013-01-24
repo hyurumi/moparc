@@ -334,7 +334,6 @@ arena.view.init = function() {
   // GROUND
 
   var groundTexture = THREE.ImageUtils.loadTexture( "images/floor.png" );
-  console.log(groundTexture)
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
   groundTexture.repeat.set( 70, 70 );
 
@@ -348,27 +347,27 @@ arena.view.init = function() {
   arena.view.scene.add( ground );
 
   var geometry = new THREE.SphereGeometry( 4, 10, 10);
-  for (var i=0; i < 12; i++) {
+  for (var i=0; i < 24; i++) {
   var material = new THREE.MeshLambertMaterial({color: 0xFFFFDD, overdraw: true});
     material.color.setHSV( 178 / 360 , 0.5 * Math.cos(Math.PI * 2 * i / 12) + 0.2, 1);
     var sphere = new THREE.Mesh(geometry,material);
     sphere.position.set(
-      arena.view.wall.unit * Math.cos(Math.PI * 2 * i / 12),
+      (arena.view.wall.unit + 100) * Math.cos(Math.PI * 2 * i / 24),
       arena.view.FLOOR -1,
-      arena.view.wall.unit * Math.sin(Math.PI * 2 * i / 12)
+      (arena.view.wall.unit + 100) * Math.sin(Math.PI * 2 * i / 24)
     );
     arena.view.scene.add(sphere);
   }
 
 
-  for (var i=0; i < 24; i++) {
+  for (var i=0; i < 36; i++) {
     var material = new THREE.MeshLambertMaterial({color: 0xFFFFDD, overdraw: true});
     material.color.setHSV( 178 / 360 , 0.5 * Math.sin(Math.PI * 2 * i / 24) + 0.2, 1);
     var sphere = new THREE.Mesh(geometry,material);
     sphere.position.set(
-      arena.view.wall.unit * 2 * Math.cos(Math.PI * 2 * i / 24),
+      arena.view.wall.unit * 2 * Math.cos(Math.PI * 2 * i / 36),
       arena.view.FLOOR -1,
-      arena.view.wall.unit * 2 * Math.sin(Math.PI * 2 * i / 24)
+      arena.view.wall.unit * 2 * Math.sin(Math.PI * 2 * i / 36)
     );
     arena.view.scene.add(sphere);
   }
@@ -451,7 +450,7 @@ arena.view.init = function() {
 }
 
 arena.view.newPosition = function(rMin, unit){
-  unit = unit || 55;
+  unit = unit || 30;
   rMin = rMin || 260;
   var r = rMin + Math.floor(Math.random() * 10) * unit;
   var theta = Math.random() * 2 * Math.PI;

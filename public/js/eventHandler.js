@@ -134,7 +134,7 @@ arena.eventHandler.onKeyDown = function ( event ) {
     case 67: { //C: Coloring
       arena.view.userMesh.material.materials[0].color.setHSV(
         arena.view.userMesh.colorAngle,
-        0.6, 1
+        0.8, 1
       );
       arena.socket.user.socket.emit('updateUserBehavior',{
         behavior:'color', action:'start'
