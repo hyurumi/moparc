@@ -30,7 +30,12 @@ connect.createServer(
 
 
 //IO Connections
-var io = io.listen(config.SOCKETIO_PORT);
+var io;
+
+if(process.env.NODE_ENV === "production")
+  io = io.listen(config.SOCKETIO_PORT,{ 'log level': 1 });
+else
+  io = io.listen(config.SOCKETIO_PORT);
 
 io.of("/user").on("connection", function(socket){
   //var address = socket.handshake.address;
