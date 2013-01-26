@@ -193,10 +193,11 @@ net.createServer(function(socket){
   var buff = "";
 
   socket.on("data", function(openniData){
-    console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
+    if(process.env.NODE_ENV !== "production")
+      console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
     var mess = buff + openniData.toString();
     mess = mess.slice(0, mess.length-1) + "}";
-    console.log(mess);
+    //console.log(mess);
     io.sockets.emit('message', mess); // odd approach
   });
   socket.on('error', function (in_exc) {
