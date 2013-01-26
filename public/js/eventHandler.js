@@ -35,6 +35,7 @@ arena.eventHandler.init = function(){
 
   // In landing Page
   $('#entryButton').on('click', arena.eventHandler.onEntryButtonClicked);
+  $('#entryName').on('keyup', arena.eventHandler.onEnterSimulateEntryButtonClicked);
 
 };
 
@@ -245,6 +246,13 @@ arena.eventHandler.onKeyUp = function ( event ) {
   }
 };
 
+arena.eventHandler.onEnterSimulateEntryButtonClicked = function(){
+  switch(event.keyCode) {
+    case 13: {
+      arena.eventHandler.onEntryButtonClicked();
+    }
+  }
+}
 
 arena.eventHandler.onEntryButtonClicked = function(){
   var position = arena.view.newPosition();
@@ -275,6 +283,7 @@ arena.eventHandler.onEntryButtonClicked = function(){
         name: name
       }
     );
+    $('#entryName').off('keyup');
     $("#landing_page").hide();
     $(document).on('keydown', arena.eventHandler.onKeyDown);
     $(document).on('keyup', arena.eventHandler.onKeyUp);
