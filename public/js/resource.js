@@ -4,7 +4,7 @@ arena.resource = {
     dancer:"obj/miku/miku.js",
     stage:"obj/stage/stage.js"
   },
-  video : 'video/miku4.mp4'
+  video : 'video/miku6.webm'
 };
 
 arena.resource.initialize = function(callback){
