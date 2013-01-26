@@ -99,11 +99,12 @@ arena.eventHandler.onKeyDown = function ( event ) {
       break;
     }
 
+    case 38:
     case 87: // w
       arena.eventHandler.moveForward = true;
     break;
 
-    //case 37: // left
+    case 37: // left
     case 65:{ // a
       if (arena.config.CAMERA_MODE === "FIXED") {
         arena.view.cameraTarget3.x -= arena.view.angleCycle;
@@ -113,11 +114,13 @@ arena.eventHandler.onKeyDown = function ( event ) {
       }
       break;
     }
+
+    case 40:
     case 83: // s
       arena.eventHandler.moveBackward = true;
     break;
 
-    //case 39: // right
+    case 39: // right
     case 68: { // d
       if (arena.config.CAMERA_MODE === "FIXED") {
         arena.view.cameraTarget3.x += arena.view.angleCycle;
@@ -129,7 +132,7 @@ arena.eventHandler.onKeyDown = function ( event ) {
     }
 
     case 82: { // R
-        arena.view.spinSpeed = 5;
+        arena.view.spinSpeed = 8;
         arena.socket.user.socket.emit('updateUserBehavior',{behavior:'spin', action:'start'});
       break;
     }
@@ -202,21 +205,21 @@ arena.eventHandler.onKeyUpInCommentInput = function(event){
 arena.eventHandler.onKeyUp = function ( event ) {
 
   switch ( event.keyCode ) {
-    //case 38: // up
+    case 38: // up
     case 87: // w
       arena.eventHandler.moveForward = false;
     break;
 
-    //case 37: // left
+    case 37: // left
     case 65: // a
       arena.eventHandler.moveLeft = false; break;
 
-    //case 40: // down
+    case 40: // down
     case 83: // s
       arena.eventHandler.moveBackward = false;
     break;
 
-    //case 39: // right
+    case 39: // right
     case 68: // d
       arena.eventHandler.moveRight = false;
     break;
